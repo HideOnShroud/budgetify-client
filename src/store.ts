@@ -20,7 +20,7 @@ const useUser = create<UserStore>((set) => ({
 
     addUser: async (user: { email: string, password: string }) => {
         try {
-            const response = await fetch('http://localhost:6969/api/user/signup', {
+            const response = await fetch('http://localhost:6969/api/user/register', {
                 method: 'POST',
                 body: JSON.stringify(user),
                 headers: {
@@ -40,7 +40,7 @@ const useUser = create<UserStore>((set) => ({
             set({ userError: "" })
         } catch (error) {
             console.error(error)
-            set({ userError: "" })
+            set({ userError: "Email Already Used" })
         }
     },
     getUser: async (user: { email: string, password: string }) => {
