@@ -12,11 +12,10 @@ const LoginPage = () => {
         password: ""
     })
 
-    const [invalidEmail, setInvalidEmail] = useState(true)
+    const [isEmailValid, setIsEmailValid] = useState(false)
     const [emailClicked, setEmailClicked] = useState(false)
     const [passwordClicked, setPasswordClicked] = useState(false)
-    const [invalidPassword, setInvalidPassword] = useState(true)
-    const [error, setError] = useState("")
+    const [isPasswordValid, setIsPasswordValid] = useState(false)
 
     const getUser = useUser((state) => state.getUser)
     const getError = useUser((state) => state.userError)
@@ -27,10 +26,10 @@ const LoginPage = () => {
 
 
         await getUser(user)
-        setError(getError)
-
 
     }
+
+
 
     const handleChange = (e: any) => {
         setForm({
@@ -38,13 +37,15 @@ const LoginPage = () => {
             [e.target.name]: e.target.value,
 
         })
+
         if (e.target.name === "email") {
-            setInvalidEmail(!/^[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(e.target.value))
+            setIsEmailValid(!/^[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(e.target.value))
 
         }
         if (e.target.name === "password") {
-            setInvalidPassword(e.target.value === "" ? true : false)
+            setIsPasswordValid(e.target.value !== "")
         }
+
     }
 
     // passwordShow
@@ -81,8 +82,8 @@ const LoginPage = () => {
                     <Input
                         height={"5vh"}
                         placeholder="Email"
-                        borderColor={emailClicked && invalidEmail ? "Red" : "Black"}
-                        focusBorderColor={invalidEmail ? "Red" : ""}
+                        borderColor={emailClicked && isEmailValid ? "Red" : "Black"}
+                        focusBorderColor={isEmailValid ? "Red" : ""}
                         name="email"
                         onClick={() => setEmailClicked(true)}
                         onChange={handleChange}
@@ -95,9 +96,9 @@ const LoginPage = () => {
                             height={"5vh"}
                             textColor={"Black"}
                             name="password"
-                            focusBorderColor={invalidPassword ? "Red" : ""}
+                            focusBorderColor={!isPasswordValid ? "Red" : ""}
                             onChange={handleChange}
-                            borderColor={passwordClicked && invalidPassword ? "Red" : "Black"}
+                            borderColor={passwordClicked && !isPasswordValid ? "Red" : "Black"}
 
                             onClick={() => setPasswordClicked(true)}
                             type={show ? 'text' : 'password'}
@@ -115,23 +116,24 @@ const LoginPage = () => {
                             </Button>
                         </InputRightElement>
                     </InputGroup>
-                    {error != "" ? <Text color={"Red"}>{error}</Text> : []}
-                    {!invalidPassword && !invalidEmail ?
-                        <Button
-                            background={"#B9E2E6"}
-                            width={"xs"}
-                            height={"5vh"}
-                            onClick={handleSubmit}
-                        ><Text
+
+                    {getError !== "" ? <Text color={"Red"}>{getError}</Text> : []}
+
+
+                    <Button
+                        background={"#B9E2E6"}
+                        width={"xs"}
+                        height={"5vh"}
+                        onClick={handleSubmit}
+                        isDisabled={!isPasswordValid || isEmailValid}
+                    >
+
+                        <Text
                             textColor={'black'}
-                            fontWeight={400}>Login</Text></Button> : <Button
-                                background={"grey"}
-                                width={"xs"}
-                                height={"5vh"}
-                                isActive={true}
-                            ><Text
-                                textColor={'black'}
-                                fontWeight={400}>Login</Text></Button>}
+                            fontWeight={400}>Login</Text>
+                    </Button>
+
+
                 </VStack>
             </Center>
 

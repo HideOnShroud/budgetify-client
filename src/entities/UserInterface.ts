@@ -1,4 +1,4 @@
 export interface UserInterface {
     email: string
-    token: string
+    password: string
 }

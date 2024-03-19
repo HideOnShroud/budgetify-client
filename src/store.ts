@@ -4,15 +4,16 @@ import { UserInterface } from './entities/UserInterface'
 
 interface UserStore {
     user: UserInterface
-    addUser: (user: { email: string, password: string }) => Promise<void>
-    getUser: (user: { email: string, password: string }) => Promise<void>
+
+    addUser: (user: UserInterface) => Promise<void>
+    getUser: (user: UserInterface) => Promise<void>
     userError: string
 }
 
 const useUser = create<UserStore>((set) => ({
     user: {
         email: JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').email,
-        token: JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token
+        password: JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token
     },
 
     userError: "",
@@ -24,7 +25,7 @@ const useUser = create<UserStore>((set) => ({
                 body: JSON.stringify(user),
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
+                    // 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
 
                 }
             });
@@ -49,9 +50,10 @@ const useUser = create<UserStore>((set) => ({
                 body: JSON.stringify(user),
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
+                    // 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
 
-                }
+                },
+                credentials: 'include'
             });
             if (!response.ok) {
                 throw new Error('Failed to add user');
