@@ -3,7 +3,7 @@ import { useState } from "react";
 import LoginBackground from "../../assets/loginBackground.jpg"
 import PasswordShow from "../../assets/passwordEye.png"
 import "@fontsource/alata"
-import useUser from '../../store';
+import { useUser } from '../../store';
 
 
 const RegisterPage = () => {

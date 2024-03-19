@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { UserInterface } from './entities/UserInterface'
+import { AccountInterface } from './entities/AccountInterface'
 
 
 interface UserStore {
@@ -8,6 +9,16 @@ interface UserStore {
     addUser: (user: UserInterface) => Promise<void>
     getUser: (user: UserInterface) => Promise<void>
     userError: string
+}
+
+
+interface AccountStore {
+    accounts: AccountInterface[]
+
+    // addAccount: (account: AccountInterface) => Promise<void>
+    getAccounts: () => Promise<void>
+    accountId: string
+    setAccountId: (accountId: string) => void
 }
 
 const useUser = create<UserStore>((set) => ({
@@ -72,4 +83,35 @@ const useUser = create<UserStore>((set) => ({
 
 }))
 
-export default useUser
+
+
+const useAccount = create<AccountStore>((set) => ({
+    accounts: [],
+    accountId: "",
+    getAccounts: async () => {
+        try {
+            const response = await fetch('http://localhost:6969/api/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
+
+                },
+                credentials: 'include'
+            })
+            if (!response.ok) {
+                throw new Error('Failed to get account');
+            }
+            const data: AccountInterface[] = await response.json()
+            set({ accounts: data })
+            console.log(data)
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    setAccountId: (accountId: string) => {
+        set({ accountId: accountId })
+    }
+}))
+
+export { useAccount, useUser }
