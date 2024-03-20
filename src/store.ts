@@ -21,6 +21,7 @@ interface AccountStore {
     setAccountId: (accountId: string) => void
     getAccount: (accountId: string) => Promise<void>
     account: AccountInterface
+    editAccount: (accountId: string, account: { title: String, currency: String, description: String }) => Promise<void>
 }
 
 const useUser = create<UserStore>((set) => ({
@@ -137,7 +138,35 @@ const useAccount = create<AccountStore>((set) => ({
             console.error(error);
 
         }
-    }
+    },
+    editAccount: async (accountId: string, account: { title: String, currency: String, description: String }) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/' + accountId, {
+                method: 'PATCH',
+                body: JSON.stringify(account),
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
+
+                },
+                credentials: 'include'
+
+            });
+            if (!response.ok) {
+                throw new Error('Failed to add user');
+            }
+            const data: AccountInterface = await response.json()
+            set({ account: data })
+
+
+            console.log("done")
+
+        } catch (error) {
+            console.error(error)
+
+        }
+    },
+
 }))
 
 export { useAccount, useUser }
