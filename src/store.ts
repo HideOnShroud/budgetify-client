@@ -19,6 +19,8 @@ interface AccountStore {
     getAccounts: () => Promise<void>
     accountId: string
     setAccountId: (accountId: string) => void
+    getAccount: (accountId: string) => Promise<void>
+    account: AccountInterface
 }
 
 const useUser = create<UserStore>((set) => ({
@@ -88,6 +90,8 @@ const useUser = create<UserStore>((set) => ({
 const useAccount = create<AccountStore>((set) => ({
     accounts: [],
     accountId: "",
+    account: <AccountInterface>{},
+
     getAccounts: async () => {
         try {
             const response = await fetch('http://localhost:6969/api/', {
@@ -111,6 +115,28 @@ const useAccount = create<AccountStore>((set) => ({
     },
     setAccountId: (accountId: string) => {
         set({ accountId: accountId })
+    },
+    getAccount: async (accountId: string) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/' + accountId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
+
+                },
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error('Failed to get Account');
+            }
+            const data: AccountInterface = await response.json();
+
+            set({ account: data })
+        } catch (error) {
+            console.error(error);
+
+        }
     }
 }))
 
