@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { UserInterface } from './entities/UserInterface'
 import { AccountInterface } from './entities/AccountInterface'
+import { TransactionInterface } from './entities/TransactionInterface'
 
 
 interface UserStore {
@@ -23,6 +24,26 @@ interface AccountStore {
     account: AccountInterface
     editAccount: (accountId: string, account: { title: String, currency: String, description: String }) => Promise<void>
     deleteAccount: (accountId: string) => void
+}
+
+interface TransactionStore {
+    transactions: TransactionInterface[]
+    getTransactions: () => Promise<void>
+    transactionId: string
+    setTransactionId: (transactionId: string) => void
+    getTransaction: (accountId: string) => Promise<void>
+    transaction: TransactionInterface
+    editTransaction: (transactionId: string, transaction: {
+        type: string,
+        title: string,
+        category: string,
+        amount: string,
+        date: string,
+        payee: string,
+        currency: string,
+        description: string,
+    }) => Promise<void>
+    deleteTransaction: (accountId: string) => void
 }
 
 const useUser = create<UserStore>((set) => ({
@@ -106,7 +127,7 @@ const useAccount = create<AccountStore>((set) => ({
                 credentials: 'include'
             })
             if (!response.ok) {
-                throw new Error('Failed to get account');
+                throw new Error('Failed to get accounts');
             }
             const data: AccountInterface[] = await response.json()
             set({ accounts: data })
@@ -190,4 +211,118 @@ const useAccount = create<AccountStore>((set) => ({
 
 }))
 
-export { useAccount, useUser }
+
+const useTransaction = create<TransactionStore>((set) => ({
+    transactions: [],
+    transactionId: "",
+    transaction: <TransactionInterface>{},
+    getTransactions: async () => {
+        try {
+            const response = await fetch('http://localhost:6969/api/transactions', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            })
+            if (!response.ok) {
+                throw new Error('Failed to get transactions');
+            }
+            const data: TransactionInterface[] = await response.json()
+            set({ transactions: data })
+            console.log(data)
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    setTransactionId: (transactionId: string) => {
+        set({ transactionId: transactionId })
+    },
+    getTransaction: async (transactionId: string) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/transactions/' + transactionId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
+
+                },
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error('Failed to get Transaction');
+            }
+            const data: TransactionInterface = await response.json();
+
+            set({ transaction: data })
+        } catch (error) {
+            console.error(error);
+
+        }
+    },
+
+    editTransaction: async (transactionId: string, transaction: {
+        type: string,
+        title: string,
+        category: string,
+        amount: string,
+        date: string,
+        payee: string,
+        currency: string,
+        description: string,
+    }) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/transactions/' + transactionId, {
+                method: 'PATCH',
+                body: JSON.stringify(transaction),
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').token}`
+
+                },
+                credentials: 'include'
+
+            });
+            if (!response.ok) {
+                throw new Error('Failed to add user');
+            }
+            const data: TransactionInterface = await response.json()
+            set({ transaction: data })
+
+
+            console.log("done")
+
+        } catch (error) {
+            console.error(error)
+
+        }
+    },
+
+    deleteTransaction: async (transactionId: string) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/transactions/' + transactionId, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                credentials: 'include'
+
+
+            })
+
+            if (response.ok) {
+                await useTransaction.getState().getTransactions()
+            }
+        } catch {
+            console.log("error")
+        }
+    }
+
+
+
+
+
+}))
+
+export { useAccount, useUser, useTransaction }

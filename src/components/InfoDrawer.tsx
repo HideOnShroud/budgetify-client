@@ -69,7 +69,7 @@ const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data, onSubmit, onDe
                     <VStack
                         alignItems={'start'}>
                         {list.map(
-                            (item) => ((item[0] != '_id' && item[0] != 'userId' && item[0] != '__v') ?
+                            (item) => ((item[0] != '_id' && item[0] != 'userId' && item[0] != '__v' && item[0] != 'accountId') ?
                                 <><Grid templateColumns={'repeat(5,1fr)'}
                                     w={"100%"}
                                     textAlign={'start'}>
