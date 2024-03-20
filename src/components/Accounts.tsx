@@ -7,12 +7,13 @@ import { getCookie, setCookie } from "typescript-cookie"
 const Accounts = () => {
     const accountId = useAccount((state) => state.accountId);
     const accounts = useAccount((state) => state.accounts)
+    const account = useAccount((state) => state.account)
     const getAccounts = useAccount((state) => state.getAccounts)
 
     useEffect(() => {
         getAccounts()
 
-    }, [getAccounts, accountId])
+    }, [getAccounts, accountId, account])
 
 
     return (

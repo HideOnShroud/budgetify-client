@@ -24,38 +24,29 @@ interface props {
     useDisclosure: { isOpen: boolean, onOpen: () => void, onClose: () => void }
     btnRef: React.RefObject<HTMLButtonElement>
     label: String
-    data: AccountInterface
-    pop: {}
+    data: Record<string, any>
+    pop: string[]
+    onSubmit: (formData: Record<string, any>) => Promise<void>
 }
 
-const EditDrawer = ({ useDisclosure, btnRef, label, data, pop }: props) => {
+const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props) => {
 
     const list: [string, string][] = Object.entries(data)
     const popList: string[] = Object.values(pop)
-    const editThing = useAccount((state) => state.editAccount)
 
-    const [form, setForm] = useState({
-        title: data.title,
-        currency: data.currency,
-        description: data.description
-    })
+    const [form, setForm] = useState(data)
 
 
     const handleSubmit = async (e: any) => {
-        e.preventDefault()
-        const user = { ...form }
-        const accountId = getCookie("accountId")!!
-
-        await editThing(accountId, user)
+        e.preventDefault();
+        await onSubmit(form);
+        useDisclosure.onClose()
 
     }
 
     const handleChange = (e: any) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-
-        })
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
 
     }
 
@@ -82,9 +73,17 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop }: props) => {
                 <DrawerBody>
                     <VStack
                         alignItems={'start'}>
-                        {list.map(
-                            (item) => ((!popList.includes(item[0])) ?
-                                <><Input key={item[0]} value={form.description.toString()} name={item[0]} onChange={handleChange} /></> : ""))}
+                        {Object.entries(form).map(([key, value]) =>
+                            pop.includes(key) ? null : (
+                                <Input
+                                    key={key}
+                                    value={value}
+                                    name={key}
+                                    onChange={handleChange}
+                                />
+                            )
+                        )}
+
                     </VStack>
                 </DrawerBody>
 
@@ -93,7 +92,9 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop }: props) => {
                         Cancel
                     </Button>
                     <Button colorScheme='blue'
-                        onClick={handleSubmit}>Save</Button>
+                        onClick={
+                            handleSubmit
+                        }>Save</Button>
                 </DrawerFooter>
             </DrawerContent>
         </Drawer>

@@ -95,9 +95,10 @@ const Account = ({ accountInfo }: props) => {
                     </Grid>
                 </GridItem > : []}
             </Grid >
-            {/* <InfoDrawer useDisclosure={{ isOpen, onOpen, onClose }} btnRef={infoRef} label={
-                "Account Information"} items={null} data={accountInfo} /> */}
-            <EditDrawer useDisclosure={{ isOpen, onOpen, onClose }} btnRef={infoRef} label={"Edit Account"} data={accountInfo} pop={{ id: '_id', balance: 'balance', userId: "userId", v: "__v" }} />
+            <InfoDrawer useDisclosureP={{ isOpen, onOpen, onClose }} btnRef={infoRef} label={
+                "Account Information"} items={null} data={accountInfo} />
+
+
         </>
     )
 }

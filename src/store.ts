@@ -22,6 +22,7 @@ interface AccountStore {
     getAccount: (accountId: string) => Promise<void>
     account: AccountInterface
     editAccount: (accountId: string, account: { title: String, currency: String, description: String }) => Promise<void>
+    deleteAccount: (accountId: string) => void
 }
 
 const useUser = create<UserStore>((set) => ({
@@ -166,6 +167,26 @@ const useAccount = create<AccountStore>((set) => ({
 
         }
     },
+    deleteAccount: async (accountId: string) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/' + accountId, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                credentials: 'include'
+
+
+            })
+
+            if (response.ok) {
+                await useAccount.getState().getAccounts()
+            }
+        } catch {
+            console.log("error")
+        }
+    }
 
 }))
 

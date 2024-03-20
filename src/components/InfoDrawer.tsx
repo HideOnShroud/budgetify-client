@@ -11,15 +11,19 @@ import {
     HStack,
     Image,
     Divider,
-    Spacer
+    Spacer,
+    useDisclosure
 } from "@chakra-ui/react"
 import { AccountInterface } from "../entities/AccountInterface"
 import editButton from "../assets/editButton.svg"
 import deleteButton from "../assets/deleteButton.svg"
+import EditDrawer from "./EditDrawer"
+import { useAccount } from "../store"
+import { getCookie } from "typescript-cookie"
 
 
 interface props {
-    useDisclosure: { isOpen: boolean, onOpen: () => void, onClose: () => void }
+    useDisclosureP: { isOpen: boolean, onOpen: () => void, onClose: () => void }
     btnRef: React.RefObject<HTMLButtonElement>
     label: String
     items: {} | null
@@ -27,18 +31,29 @@ interface props {
 
 }
 
-const InfoDrawer = ({ useDisclosure, btnRef, label, items, data }: props) => {
+const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data }: props) => {
 
     const list: [string, string][] = Object.entries(data)
+    const updateAccount = useAccount((state) => state.editAccount)
 
+    const handleSubmit = async (formData: Record<string, any>) => {
+        const updatedData = {
+            title: formData.title || "",
+            currency: formData.currency || "",
+            description: formData.description || "",
+        };
+        updateAccount(getCookie("accountId")!!, updatedData)
+    }
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const deleteAccount = useAccount((state) => state.deleteAccount)
 
 
     return (
         <Drawer
             size={'md'}
-            isOpen={useDisclosure.isOpen}
+            isOpen={useDisclosureP.isOpen}
             placement='right'
-            onClose={useDisclosure.onClose}
+            onClose={useDisclosureP.onClose}
             finalFocusRef={btnRef}
         >
             <DrawerOverlay />
@@ -47,7 +62,11 @@ const InfoDrawer = ({ useDisclosure, btnRef, label, items, data }: props) => {
 
                 <DrawerHeader><HStack><Heading size={'lg'} fontWeight={"500"}>{label}</Heading><Spacer />
                     <HStack>
-                        <Image src={editButton} /><Image src={deleteButton} mr={5} />
+                        <button onClick={() => {
+                            onOpen()
+
+                        }}><Image src={editButton} /></button><button
+                            onClick={() => { deleteAccount(getCookie("accountId")!!) }}><Image src={deleteButton} mr={5} /></button>
                         <DrawerCloseButton size={"xl"} mt={4} />
                     </HStack>
                 </HStack>
@@ -82,13 +101,22 @@ const InfoDrawer = ({ useDisclosure, btnRef, label, items, data }: props) => {
                 </DrawerBody>
 
                 <DrawerFooter>
-                    <Button variant='outline' mr={3} onClick={useDisclosure.onClose}>
+                    <Button variant='outline' mr={3} onClick={useDisclosureP.onClose}>
                         Cancel
                     </Button>
                     <Button colorScheme='blue'>Save</Button>
                 </DrawerFooter>
             </DrawerContent>
-        </Drawer>
+            < EditDrawer
+                useDisclosure={{ isOpen, onOpen, onClose }
+                }
+                btnRef={btnRef}
+                label={"Edit Account"}
+                data={data}
+                pop={['_id', 'balance', "userId", "__v"]}
+                onSubmit={handleSubmit} />
+        </Drawer >
+
 
     );
 }
