@@ -27,25 +27,18 @@ interface props {
     btnRef: React.RefObject<HTMLButtonElement>
     label: String
     items: {} | null
-    data: AccountInterface
+    data: Record<string, any>
+    onSubmit: (formData: Record<string, any>) => Promise<void>
+    onDelete: () => void
 
 }
 
-const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data }: props) => {
+const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data, onSubmit, onDelete }: props) => {
 
     const list: [string, string][] = Object.entries(data)
-    const updateAccount = useAccount((state) => state.editAccount)
 
-    const handleSubmit = async (formData: Record<string, any>) => {
-        const updatedData = {
-            title: formData.title || "",
-            currency: formData.currency || "",
-            description: formData.description || "",
-        };
-        updateAccount(getCookie("accountId")!!, updatedData)
-    }
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const deleteAccount = useAccount((state) => state.deleteAccount)
+
 
 
     return (
@@ -66,7 +59,7 @@ const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data }: props) => {
                             onOpen()
 
                         }}><Image src={editButton} /></button><button
-                            onClick={() => { deleteAccount(getCookie("accountId")!!) }}><Image src={deleteButton} mr={5} /></button>
+                            onClick={() => { onDelete() }}><Image src={deleteButton} mr={5} /></button>
                         <DrawerCloseButton size={"xl"} mt={4} />
                     </HStack>
                 </HStack>
@@ -114,7 +107,7 @@ const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data }: props) => {
                 label={"Edit Account"}
                 data={data}
                 pop={['_id', 'balance', "userId", "__v"]}
-                onSubmit={handleSubmit} />
+                onSubmit={onSubmit} />
         </Drawer >
 
 

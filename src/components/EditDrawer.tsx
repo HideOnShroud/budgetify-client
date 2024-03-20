@@ -31,8 +31,7 @@ interface props {
 
 const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props) => {
 
-    const list: [string, string][] = Object.entries(data)
-    const popList: string[] = Object.values(pop)
+
 
     const [form, setForm] = useState(data)
 

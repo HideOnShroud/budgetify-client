@@ -28,6 +28,20 @@ const Account = ({ accountInfo }: props) => {
     const infoRef = useRef<HTMLButtonElement>(null)
 
 
+    const updateAccount = useAccount((state) => state.editAccount)
+
+    const handleSubmit = async (formData: Record<string, any>) => {
+        const updatedData = {
+            title: formData.title || "",
+            currency: formData.currency || "",
+            description: formData.description || "",
+        };
+        updateAccount(getCookie("accountId")!!, updatedData)
+    }
+    const deleteAccount = useAccount((state) => state.deleteAccount)
+
+
+
     return (
         <>
             <Grid
@@ -96,7 +110,7 @@ const Account = ({ accountInfo }: props) => {
                 </GridItem > : []}
             </Grid >
             <InfoDrawer useDisclosureP={{ isOpen, onOpen, onClose }} btnRef={infoRef} label={
-                "Account Information"} items={null} data={accountInfo} />
+                "Account Information"} items={null} data={accountInfo} onSubmit={handleSubmit} onDelete={() => deleteAccount(getCookie("accountId")!!)} />
 
 
         </>
