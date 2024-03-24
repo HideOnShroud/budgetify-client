@@ -1,0 +1,61 @@
+:root {
+    --main-blue: #81a8c9;
+    --main-white: #3a3a3a;
+    --main-grey: rgba(255, 255, 255, 0.23);
+    --main-dark-grey: #ffffff;
+    --main-ease: cubic-bezier(.65,.05,.36,1);
+}
+
+
+.outlined-input {
+    position: relative;
+    color: rgb(226, 226, 226);
+    width: 100%;
+    padding: 5px 0 5px 0;
+}
+
+.outlined-input input {
+    color: var(--main-white);
+    height: 2.5rem;
+    outline: 1px solid var(--main-grey);
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    background-color: var(--main-dark-grey);
+    padding-left: 20px;
+    font-size: 20px;
+    transition: .1s var(--main-ease);
+    outline-color: #37373780;
+}
+
+.outlined-input label {
+    position: absolute;
+    outline-color: #37373780;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    background-color: var(--main-dark-grey);
+    color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    transition: .2s var(--main-ease);
+    font-size: 1rem;
+    pointer-events: none;
+    padding: 0 5px;
+}
+
+.outlined-input input:not(:placeholder-shown) ~ label,
+.outlined-input input:focus ~ label {
+    top: 0px;
+    left: 10px;
+    font-size: 1rem;
+}
+
+.outlined-input input:focus {
+    outline: 1px solid var(--main-blue) !important;
+}
+.outlined-input input:hover {
+    outline: 1px solid var(--main-white);
+}
+.outlined-input input:focus ~ label {
+    color: var(--main-blue) !important;
+}

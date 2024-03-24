@@ -59,6 +59,7 @@ const Account = ({ accountInfo }: props) => {
                 onClick={() => {
                     setCookie("accountId", accountInfo._id)
                     setAccountId(accountInfo._id)
+                    setCookie("cur", accountInfo.currency.toString())
 
                 }}
                 onPointerEnter={() => {

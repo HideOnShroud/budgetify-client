@@ -16,7 +16,11 @@ interface UserStore {
 interface AccountStore {
     accounts: AccountInterface[]
 
-    // addAccount: (account: AccountInterface) => Promise<void>
+    addAccount: (formData: {
+        title: String,
+        currency: String,
+        description: String
+    }) => Promise<void>
     getAccounts: () => Promise<void>
     accountId: string
     setAccountId: (accountId: string) => void
@@ -28,6 +32,16 @@ interface AccountStore {
 
 interface TransactionStore {
     transactions: TransactionInterface[]
+    addTransaction: (formData: {
+        type: string,
+        title: string,
+        category: string,
+        amount: string,
+        date: string,
+        payee: string,
+        currency: string,
+        description: string,
+    }) => Promise<void>
     getTransactions: () => Promise<void>
     transactionId: string
     setTransactionId: (transactionId: string) => void
@@ -114,6 +128,35 @@ const useAccount = create<AccountStore>((set) => ({
     accounts: [],
     accountId: "",
     account: <AccountInterface>{},
+    addAccount: async (formData: {
+        title: String,
+        currency: String,
+        description: String
+    }) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                credentials: 'include'
+
+            });
+            if (!response.ok) {
+                throw new Error('Failed to add Account');
+            }
+            const data: AccountInterface = await response.json()
+            set({ account: data })
+            localStorage.setItem("user", JSON.stringify(data))
+
+            console.log("done")
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
 
     getAccounts: async () => {
         try {
@@ -216,6 +259,39 @@ const useTransaction = create<TransactionStore>((set) => ({
     transactions: [],
     transactionId: "",
     transaction: <TransactionInterface>{},
+    addTransaction: async (formData: {
+        type: string,
+        title: string,
+        category: string,
+        amount: string,
+        date: string,
+        payee: string,
+        currency: string,
+        description: string,
+    }) => {
+        try {
+            const response = await fetch('http://localhost:6969/api/transactions', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                credentials: 'include'
+
+            });
+            if (!response.ok) {
+                throw new Error('Failed to add Account');
+            }
+            const data: TransactionInterface = await response.json()
+            set({ transaction: data })
+            localStorage.setItem("user", JSON.stringify(data))
+
+            console.log("done")
+        } catch (error) {
+            console.error(error)
+        }
+    },
     getTransactions: async () => {
         try {
             const response = await fetch('http://localhost:6969/api/transactions', {

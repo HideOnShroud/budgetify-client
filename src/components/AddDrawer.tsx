@@ -12,7 +12,7 @@ import {
     Image,
     Divider,
     Spacer,
-    Select
+    Select,
 } from "@chakra-ui/react"
 import { AccountInterface } from "../entities/AccountInterface"
 import editButton from "../assets/editButton.svg"
@@ -27,11 +27,10 @@ interface props {
     btnRef: React.RefObject<HTMLButtonElement>
     label: String
     data: Record<string, any>
-    pop: string[]
     onSubmit: (formData: Record<string, any>) => Promise<void>
 }
 
-const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props) => {
+const AddDrawer = ({ useDisclosure, btnRef, label, data, onSubmit }: props) => {
 
 
 
@@ -42,12 +41,15 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
         e.preventDefault();
         await onSubmit(form);
         useDisclosure.onClose()
+        setForm(data)
 
     }
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
+
+        console.log(data)
 
     }
 
@@ -75,16 +77,28 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
                     <VStack
                         alignItems={'start'}>
                         {Object.entries(form).map(([key, value]) =>
-                            pop.includes(key) ? null : (
-                                typeof value === "object" ? <Select>{
-                                    value.map((vale: string) => <option value={vale}>{vale}</option>)}
-                                </Select> :
+                            typeof value === "object" ? <Select name={key} onChange={handleChange} key={key}>{
+                                value.map((vale: string) => <option value={vale}>{vale}</option>,
+                                    console.log(value))}
+                            </Select>
+                                :
+
+                                (console.log(value),
+
+                                    // <Input
+                                    //     key={key}
+                                    //     value={value}
+                                    //     name={key}
+                                    //     onChange={handleChange}
+                                    // />
+                                    // ,
                                     <InputMUI placeholder={key} key={key}
                                         value={value}
                                         name={key}
                                         onChange={handleChange} />
+                                )
 
-                            )
+
                         )}
 
                     </VStack>
@@ -105,4 +119,4 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
     );
 }
 
-export default EditDrawer;
+export default AddDrawer;

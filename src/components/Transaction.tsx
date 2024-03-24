@@ -82,8 +82,8 @@ const Transaction = ({ transactionInfo }: props) => {
                     <Box
                     >
                         {transactionInfo.type === "expense" ?
-                            <Text textColor={"#EE3F19"} fontSize={'4xl'}>-{String(transactionInfo.amount)}$</Text> :
-                            <Text textColor={"#21C206"} fontSize={'4xl'}>{String(transactionInfo.amount)}$</Text>}
+                            <Text textColor={"#EE3F19"} fontSize={'4xl'}>-{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text> :
+                            <Text textColor={"#21C206"} fontSize={'4xl'}>{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text>}
                     </Box>
                 </CardFooter>
             </Card>
