@@ -61,6 +61,12 @@ interface TransactionStore {
     transactionType: String
 }
 
+
+interface SearchStore {
+    search: string,
+    setSearch: (search: string) => void
+}
+
 const useUser = create<UserStore>((set) => ({
     user: {
         email: JSON.parse(localStorage.getItem('user') || '{"email":"", "token":""}').email,
@@ -406,4 +412,12 @@ const useTransaction = create<TransactionStore>((set) => ({
 
 }))
 
-export { useAccount, useUser, useTransaction }
+const useSearch = create<SearchStore>((set) => ({
+    search: "",
+    setSearch: (search: string) => {
+        set({ search: search })
+        console.log(search)
+    }
+}))
+
+export { useAccount, useUser, useTransaction, useSearch }

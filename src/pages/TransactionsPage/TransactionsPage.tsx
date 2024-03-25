@@ -13,12 +13,15 @@ import { TransactionInterface } from "../../entities/TransactionInterface"
 import { getCookie } from "typescript-cookie"
 import addIcon from "../../assets/plus.svg"
 import CircularIcon from "../../components/CircularIcon"
+import Search from "../../components/Search"
+import { useEffect, useState } from "react"
 
 const TransactionsPage = () => {
 
 
     const addAccount = useAccount((state) => state.addAccount)
     const addTransaction = useTransaction((state) => state.addTransaction)
+
     const setTransactionType = useTransaction((state) => state.setTransactionType)
 
 
@@ -59,29 +62,7 @@ const TransactionsPage = () => {
         "description": ""
     }
     return (
-        // <Grid pl={14} gridTemplateColumns={'repeat(4, 1fr)'} background={"#E9E9E9"}>
-        //     <GridItem colSpan={1} >
-        //         <VStack overflowY="auto" >
-        //             <Box w={"100%"} style={{ height: "100vh", overflowY: "auto", scrollbarWidth: 'none' }}>
-        //                 <Accounts />
-        //             </Box>
-        //         </VStack>
-        //     </GridItem>
 
-
-        //     <GridItem colSpan={2} className="scrollable-grid-item">
-        //         <VStack overflowY="auto">
-        //             <Box style={{ height: "100vh", overflowY: "auto", scrollbarWidth: 'none' }}>
-        //                 <Transactions />
-        //             </Box>
-        //         </VStack>
-        //     </GridItem>
-        //     <GridItem colSpan={1} >
-        //         <VStack >
-        //             <Sidebar data={[<SidebarItem label={"Add Account"} data={data} onSubmit={handleSubmit} />, <SidebarItem label={"Add Transaction"} data={transaction} onSubmit={handleTrans} />]} />
-        //         </VStack>
-        //     </GridItem>
-        // </Grid >
         <Flex background={"#e9e9e9"}>
             <VStack overflowY="auto" flex={2}>
                 <Box style={{ height: "100vh", overflowY: "auto", scrollbarWidth: 'none' }}>
@@ -89,6 +70,7 @@ const TransactionsPage = () => {
                 </Box>
             </VStack>
             <VStack overflowY="auto" flex={3}>
+                <Search />
                 <Box w={"100%"} style={{ height: "100vh", overflowY: "auto", scrollbarWidth: 'none' }}>
                     <Transactions />
                 </Box>
