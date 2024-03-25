@@ -9,6 +9,8 @@ const Transactions = () => {
     const transactions = useTransaction((state) => state.transactions)
     const transaction = useTransaction((state) => state.transaction)
     const getTransactions = useTransaction((state) => state.getTransactions)
+    const getTransactionType = useTransaction((state) => state.transactionType)
+
 
     useEffect(() => {
         getTransactions()
@@ -18,7 +20,10 @@ const Transactions = () => {
 
     return (
         <>
-            {transactions.map((item) => <Transaction transactionInfo={item} />)}
+            {/* {transactions.map((item) => type === "Income" ? <Transaction transactionInfo={item}  />)} */}
+            {getTransactionType === "Income" ? transactions.filter(item => item.type === "Income").map((item) => <Transaction transactionInfo={item} />)
+                : getTransactionType === "Expense" ? transactions.filter(item => item.type === "Expense").map((item) => <Transaction transactionInfo={item} />)
+                    : transactions.map((item) => <Transaction transactionInfo={item} />)}
         </>
     );
 }

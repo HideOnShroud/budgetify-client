@@ -39,12 +39,12 @@ interface TransactionStore {
         amount: string,
         date: string,
         payee: string,
-        currency: string,
         description: string,
     }) => Promise<void>
     getTransactions: () => Promise<void>
     transactionId: string
     setTransactionId: (transactionId: string) => void
+    setTransactionType: (transactionType: String) => void
     getTransaction: (accountId: string) => Promise<void>
     transaction: TransactionInterface
     editTransaction: (transactionId: string, transaction: {
@@ -58,6 +58,7 @@ interface TransactionStore {
         description: string,
     }) => Promise<void>
     deleteTransaction: (accountId: string) => void
+    transactionType: String
 }
 
 const useUser = create<UserStore>((set) => ({
@@ -258,6 +259,7 @@ const useAccount = create<AccountStore>((set) => ({
 const useTransaction = create<TransactionStore>((set) => ({
     transactions: [],
     transactionId: "",
+    transactionType: "",
     transaction: <TransactionInterface>{},
     addTransaction: async (formData: {
         type: string,
@@ -266,7 +268,6 @@ const useTransaction = create<TransactionStore>((set) => ({
         amount: string,
         date: string,
         payee: string,
-        currency: string,
         description: string,
     }) => {
         try {
@@ -281,7 +282,7 @@ const useTransaction = create<TransactionStore>((set) => ({
 
             });
             if (!response.ok) {
-                throw new Error('Failed to add Account');
+                throw new Error('Failed to add transaction');
             }
             const data: TransactionInterface = await response.json()
             set({ transaction: data })
@@ -313,6 +314,10 @@ const useTransaction = create<TransactionStore>((set) => ({
     },
     setTransactionId: (transactionId: string) => {
         set({ transactionId: transactionId })
+    },
+    setTransactionType: (transactionType: String) => {
+        set({ transactionType: transactionType })
+        console.log(transactionType)
     },
     getTransaction: async (transactionId: string) => {
         try {

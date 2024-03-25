@@ -1,17 +1,27 @@
 import { Box, Button, useDisclosure } from "@chakra-ui/react";
-import { useRef } from "react";
+import { ReactComponentElement, useRef } from "react";
 import { useAccount } from "../store";
 import EditDrawer from "./EditDrawer";
 import AddDrawer from "./AddDrawer";
 import currencies from "../data/currencies";
 
 interface Props {
+    type: String
     label: String
     data: Record<string, any>
-    onSubmit: (formData: Record<string, any>) => Promise<void>
+    onSubmit: ((formData: Record<string, any>) => Promise<void>) | ((transactionType: String) => void)
+    icon: ReactComponentElement<any>
 }
 
-const SidebarItem = ({ label, data, onSubmit }: Props) => {
+// const handleSubmit = async (e: any) => {
+//     e.preventDefault();
+//     await onSubmit(form);
+//     useDisclosure.onClose()
+//     setForm(data)
+
+// }
+
+const SidebarItem = ({ type, label, data, onSubmit, icon }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const infoRef = useRef<HTMLButtonElement>(null)
@@ -20,15 +30,10 @@ const SidebarItem = ({ label, data, onSubmit }: Props) => {
 
     return (
         <>
-            <Button w={'50%'} textAlign={'start'} placeContent={"start"}
-                background={"#B9E2E6"} ref={infoRef} leftIcon={<Box
-                    bgColor={"#f9f9f9"}
-                    borderRadius={'full'}
-                    onClick={onOpen}
-                    color={"#B9E2E6"}
-                    padding={'0.8rem'}
-                    fontSize={'xl'}>+</Box>}>{label}</Button>
-            <AddDrawer useDisclosure={{ isOpen, onOpen, onClose }} btnRef={infoRef} label={label} data={data} onSubmit={onSubmit} />
+            <Button w={'80%'} h={"5%"} mb={"2"} borderRadius={"xl"} textAlign={'start'} placeContent={"start"}
+                onClick={type === "add" ? onOpen : () => onSubmit(type)}
+                background={type === "add" ? "#B9E2E6" : "#F9F9F9"} ref={infoRef} leftIcon={icon}>{label}</Button>
+            {type === "add" ? <AddDrawer useDisclosure={{ isOpen, onOpen, onClose }} btnRef={infoRef} label={label} data={data} onSubmit={onSubmit as ((formData: Record<string, any>) => Promise<void>)} /> : null}
         </>
     );
 }

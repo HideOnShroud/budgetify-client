@@ -39,12 +39,13 @@ const Transaction = ({ transactionInfo }: props) => {
         <>
 
             <Card
+                mb={8}
+                width={"100%"}
                 bgColor={"#F9F9F9"}
-                w={"70%"}
                 direction={"row"}
                 onClick={onOpen}>
                 <CardHeader
-
+                    w={"25%"}
                     mt={4}
                     mb={4}
                     ml={4}
@@ -54,7 +55,7 @@ const Transaction = ({ transactionInfo }: props) => {
                     <Center h={"100%"}>
 
                         <Heading
-                            fontSize={"lg"}>{transactionInfo.category}</Heading>
+                            fontSize={"2xl"}>{transactionInfo.category}</Heading>
                     </Center>
 
                 </CardHeader>
@@ -70,11 +71,11 @@ const Transaction = ({ transactionInfo }: props) => {
                                 bgColor={"#EE3F19"}
                                 borderRadius={'full'}
                                 padding={'0.8rem'}><Image src={Arrow}></Image></Box>
-                                <Text>Expenses</Text></HStack> : <HStack><Box bgColor={"#21C206"} borderRadius={'full'}
-                                    padding={'0.8rem'}> <Image src={ArrowDown}></Image></Box><Text>Income</Text></HStack>}
+                                <Text fontSize={'large'}>Expenses + </Text> </HStack> : <HStack><Box bgColor={"#21C206"} borderRadius={'full'}
+                                    padding={'0.8rem'}> <Image src={ArrowDown}></Image></Box><Text fontSize={'large'}>Income +</Text></HStack>}
 
-                            <Text>{transactionInfo.date}</Text>
-                            <Text>{transactionInfo.payee}</Text>
+                            <Text fontSize={'large'}>{transactionInfo.date} + </Text>
+                            <Text fontSize={'large'}>{transactionInfo.payee}</Text>
                         </HStack>
                     </VStack>
                 </CardBody>
@@ -82,8 +83,8 @@ const Transaction = ({ transactionInfo }: props) => {
                     <Box
                     >
                         {transactionInfo.type === "expense" ?
-                            <Text textColor={"#EE3F19"} fontSize={'4xl'}>-{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text> :
-                            <Text textColor={"#21C206"} fontSize={'4xl'}>{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text>}
+                            <Text textColor={"#EE3F19"} fontSize={'3xl'}>-{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text> :
+                            <Text textColor={"#21C206"} fontSize={'3xl'}>{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text>}
                     </Box>
                 </CardFooter>
             </Card>
