@@ -91,7 +91,7 @@ const Transaction = ({ transactionInfo }: props) => {
                 </CardFooter>
             </Card>
             <InfoDrawer useDisclosureP={{ isOpen, onOpen, onClose }} btnRef={infoRef} label={
-                "Account Information"} items={null} data={transactionInfo} onSubmit={handleSubmit} onDelete={() => deleteAccount(transactionInfo._id)} />
+                "Transaction Information"} items={null} data={transactionInfo} onSubmit={handleSubmit} onDelete={() => deleteAccount(transactionInfo._id)} />
 
 
         </>

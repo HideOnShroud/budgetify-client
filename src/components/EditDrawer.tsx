@@ -38,6 +38,13 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
 
     const [form, setForm] = useState(data)
     const [formCopy, setFormCopy] = useState(data);
+    const [isTitle, setIsTitle] = useState(true)
+    const [isCurrency, setIsCurrency] = useState(true)
+    const [isAmount, setIsAmount] = useState(true)
+    const [isPayee, setIsPayee] = useState(true)
+    const [isType, setIsType] = useState(true)
+    const [isCategory, setIsCategory] = useState(true)
+
 
     useEffect(() => {
         const initialFormCopy = { ...form }
@@ -62,6 +69,48 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
+
+        if (!Object.keys(form).includes("currency")) {
+            setIsCurrency(false);
+        }
+        if (!Object.keys(form).includes("amount")) {
+            setIsAmount(false);
+        }
+        if (!Object.keys(form).includes("payee")) {
+            setIsPayee(false);
+        }
+        if (!Object.keys(form).includes("type")) {
+            setIsType(false);
+        }
+        if (!Object.keys(form).includes("category")) {
+            setIsCategory(false);
+        }
+
+        if (e.target.name == "title") {
+            setIsTitle(e.target.value == "")
+        }
+        if (e.target.name == "currency") {
+            if (typeof e.target.value == "object") {
+                setIsCurrency(true)
+            }
+            setIsCurrency(e.target.value == "")
+        }
+        if (e.target.name == "type") {
+            if (typeof e.target.value == "object") {
+                setIsType(true)
+            }
+            setIsType(e.target.value == "")
+        }
+        if (e.target.name == "amount") {
+            setIsAmount(e.target.value == "")
+        }
+        if (e.target.name == "category") {
+            setIsCategory(e.target.value == "")
+        }
+        if (e.target.name == "payee") {
+            setIsPayee(e.target.value == "")
+        }
+
 
     }
 
@@ -88,27 +137,44 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
                 <DrawerBody>
                     <VStack
                         alignItems={'start'}>
-                        {Object.entries(formCopy).map(([key, value]) =>
+                        {Object.entries(formCopy).map(([key, value]) => (
                             pop.includes(key) ? null : (
-                                typeof value === "object" ? <Select name={key}
-                                    value={form[key]}
-                                    onChange={handleChange}
-                                    key={key}>
-                                    <option>{key}</option>
-                                    {
-                                        value.map((vale: string) => <option key={vale} value={vale}>{vale}</option>)}
-                                </Select> :
-                                    <InputMUI
-                                        type={key === "ammount" ? "number" : "text"}
-                                        placeholder={key}
-                                        key={key}
+                                typeof value === "object" ? (
+                                    <Select name={key}
                                         value={form[key]}
-                                        name={key}
                                         onChange={handleChange}
-                                    />
+                                        key={key}>
+                                        <option value={""}>{key.at(0)?.toUpperCase() + key.slice(1)}</option>
+                                        {
+                                            value.map((vale: string) => (
+                                                <option key={vale} value={vale}>{vale}</option>
+                                            ))}
+                                    </Select>
+                                ) :
+                                    (
+                                        console.log(form[key]),
+                                        key.includes("date") ? (
+                                            <Input
+                                                placeholder="Select Date and Time"
+                                                size="md"
+                                                value={form[key]}
+                                                key={key}
+                                                name={key}
+                                                onChange={handleChange}
+                                                type="datetime-local"
+                                            />
+                                        ) : (<InputMUI
+                                            type={key === "amount" ? "number" : "text"}
+                                            placeholder={key}
+                                            key={key}
+                                            value={form[key]}
+                                            name={key}
+                                            onChange={handleChange}
+                                        />
+                                        )
 
-                            )
-                        )}
+                                    )
+                            )))}
 
                     </VStack>
                 </DrawerBody>
@@ -118,6 +184,7 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
                         Cancel
                     </Button>
                     <Button colorScheme='blue'
+                        isDisabled={isTitle || isAmount || isCategory || isCurrency || isPayee || isType}
                         onClick={
                             handleSubmit
                         }>Save</Button>

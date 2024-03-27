@@ -12,13 +12,17 @@ import {
     Image,
     Divider,
     Spacer,
+    CloseButton,
     useDisclosure,
     AlertDialog,
     AlertDialogOverlay,
     AlertDialogContent,
     AlertDialogBody,
     AlertDialogFooter,
-    AlertDialogHeader
+    AlertDialogHeader,
+    useToast,
+    Box,
+    Text
 } from "@chakra-ui/react"
 import { AccountInterface } from "../entities/AccountInterface"
 import editButton from "../assets/editButton.svg"
@@ -41,7 +45,7 @@ interface props {
 }
 
 const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data, onSubmit, onDelete }: props) => {
-
+    const toast = useToast()
     const list: [string, string][] = Object.entries(data)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -135,6 +139,30 @@ const InfoDrawer = ({ useDisclosureP, btnRef, label, items, data, onSubmit, onDe
                             <Button onClick={() => {
                                 onDelete()
                                 alert.onClose()
+                                toast({
+                                    title: label + ' was successfully removed',
+                                    status: 'success',
+                                    position: "top",
+                                    duration: 9000,
+                                    isClosable: true,
+                                    containerStyle: {
+                                        ml: "17%",
+                                        width: '50%',
+                                        maxWidth: '100%',
+                                    },
+                                    render: ({ onClose }) => (
+                                        <HStack bg="#1AA103" color="white" p={3} borderRadius="md">
+                                            <Text>
+
+                                                {label} was successfully removed
+                                            </Text>
+                                            <Spacer />
+                                            <CloseButton onClick={onClose}>
+                                                Close
+                                            </CloseButton>
+                                        </HStack>
+                                    ),
+                                })
                             }} ml={3}>
                                 Yes
                             </Button>
