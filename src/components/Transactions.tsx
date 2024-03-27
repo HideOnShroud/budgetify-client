@@ -12,20 +12,22 @@ const Transactions = () => {
     const transaction = useTransaction((state) => state.transaction)
     const getTransactions = useTransaction((state) => state.getTransactions)
     const getTransactionType = useTransaction((state) => state.transactionType)
-
+    const getSort = useSearch((state) => state.sort)
 
     useEffect(() => {
         getTransactions()
 
-    }, [getTransactions, accountId, transaction])
+    }, [getTransactions, accountId, transaction, getSort])
 
 
     return (
         <>
             {/* {transactions.map((item) => type === "Income" ? <Transaction transactionInfo={item}  />)} */}
-            {getTransactionType === "Income" ? transactions.filter(item => item.type === "Income").map((item) => <Transaction transactionInfo={item} />)
-                : getTransactionType === "Expense" ? transactions.filter(item => item.type === "Expense").map((item) => <Transaction transactionInfo={item} />)
+            {getTransactionType === "Income" ?
+                transactions.filter(item => item.type === "Income").filter(item => { return search.toLowerCase() === "" ? item : item.title.toLowerCase().includes(search) }).map((item) => <Transaction transactionInfo={item} />)
+                : getTransactionType === "Expense" ? transactions.filter(item => item.type === "Expense").filter(item => { return search.toLowerCase() === "" ? item : item.title.toLowerCase().includes(search) }).map((item) => <Transaction transactionInfo={item} />)
                     : transactions.filter((item) => { return search.toLowerCase() === "" ? item : item.title.toLowerCase().includes(search) }).map((item) => <Transaction transactionInfo={item} />)}
+
         </>
     );
 }

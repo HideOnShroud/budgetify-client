@@ -65,6 +65,8 @@ interface TransactionStore {
 interface SearchStore {
     search: string,
     setSearch: (search: string) => void
+    sort: string,
+    setSort: (sort: string) => void
 }
 
 const useUser = create<UserStore>((set) => ({
@@ -417,7 +419,12 @@ const useSearch = create<SearchStore>((set) => ({
     setSearch: (search: string) => {
         set({ search: search })
         console.log(search)
-    }
+    },
+    sort: "",
+    setSort: (sort: string) => {
+        set({ search: sort })
+        console.log(sort)
+    },
 }))
 
 export { useAccount, useUser, useTransaction, useSearch }

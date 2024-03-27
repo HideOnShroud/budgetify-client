@@ -19,6 +19,8 @@ const Transaction = ({ transactionInfo }: props) => {
 
     const updateAccount = useTransaction((state) => state.editTransaction)
 
+    const date = new Date(transactionInfo.date)
+    const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear().toString().slice(-2)}`
     const handleSubmit = async (formData: Record<string, any>) => {
         const updatedData = {
 
@@ -74,7 +76,7 @@ const Transaction = ({ transactionInfo }: props) => {
                                 <Text fontSize={'large'}>Expenses + </Text> </HStack> : <HStack><Box bgColor={"#21C206"} borderRadius={'full'}
                                     padding={'0.8rem'}> <Image src={ArrowDown}></Image></Box><Text fontSize={'large'}>Income +</Text></HStack>}
 
-                            <Text fontSize={'large'}>{transactionInfo.date} + </Text>
+                            <Text fontSize={'large'}>{formattedDate} + </Text>
                             <Text fontSize={'large'}>{transactionInfo.payee}</Text>
                         </HStack>
                     </VStack>
@@ -82,7 +84,7 @@ const Transaction = ({ transactionInfo }: props) => {
                 <CardFooter>
                     <Box
                     >
-                        {transactionInfo.type === "expense" ?
+                        {transactionInfo.type === "Expense" ?
                             <Text textColor={"#EE3F19"} fontSize={'3xl'}>-{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text> :
                             <Text textColor={"#21C206"} fontSize={'3xl'}>{String(transactionInfo.amount)}{String(transactionInfo.currency.at(-2))}</Text>}
                     </Box>

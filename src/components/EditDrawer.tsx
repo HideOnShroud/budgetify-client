@@ -17,10 +17,11 @@ import {
 import { AccountInterface } from "../entities/AccountInterface"
 import editButton from "../assets/editButton.svg"
 import deleteButton from "../assets/deleteButton.svg"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAccount } from "../store"
 import { getCookie } from "typescript-cookie"
 import InputMUI from "./InputMUI/InputMUI"
+import currencies from "../data/currencies"
 
 interface props {
     useDisclosure: { isOpen: boolean, onOpen: () => void, onClose: () => void }
@@ -36,7 +37,20 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
 
 
     const [form, setForm] = useState(data)
+    const [formCopy, setFormCopy] = useState(data);
 
+    useEffect(() => {
+        const initialFormCopy = { ...form }
+        for (const key in initialFormCopy) {
+            if (key.includes("currency")) {
+                initialFormCopy[key] = currencies
+            }
+            if (key.includes("type")) {
+                initialFormCopy[key] = ["Income", "Expense"]
+            }
+        }
+        setFormCopy(initialFormCopy)
+    }, []);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -74,15 +88,24 @@ const EditDrawer = ({ useDisclosure, btnRef, label, data, pop, onSubmit }: props
                 <DrawerBody>
                     <VStack
                         alignItems={'start'}>
-                        {Object.entries(form).map(([key, value]) =>
+                        {Object.entries(formCopy).map(([key, value]) =>
                             pop.includes(key) ? null : (
-                                typeof value === "object" ? <Select>{
-                                    value.map((vale: string) => <option value={vale}>{vale}</option>)}
+                                typeof value === "object" ? <Select name={key}
+                                    value={form[key]}
+                                    onChange={handleChange}
+                                    key={key}>
+                                    <option>{key}</option>
+                                    {
+                                        value.map((vale: string) => <option key={vale} value={vale}>{vale}</option>)}
                                 </Select> :
-                                    <InputMUI placeholder={key} key={key}
-                                        value={value}
+                                    <InputMUI
+                                        type={key === "ammount" ? "number" : "text"}
+                                        placeholder={key}
+                                        key={key}
+                                        value={form[key]}
                                         name={key}
-                                        onChange={handleChange} />
+                                        onChange={handleChange}
+                                    />
 
                             )
                         )}

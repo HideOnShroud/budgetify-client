@@ -1,4 +1,4 @@
-import { Grid, GridItem, HStack, Spacer, VStack, Image, Box, Flex } from "@chakra-ui/react"
+import { Grid, GridItem, HStack, Spacer, VStack, Image, Box, Flex, Select } from "@chakra-ui/react"
 import Accounts from "../../components/Accounts"
 import Transactions from "../../components/Transactions"
 import LoginPage from "../../pages/LoginPage/LoginPage"
@@ -15,6 +15,7 @@ import addIcon from "../../assets/plus.svg"
 import CircularIcon from "../../components/CircularIcon"
 import Search from "../../components/Search"
 import { useEffect, useState } from "react"
+import Sort from "../../components/Sort"
 
 const TransactionsPage = () => {
 
@@ -23,7 +24,6 @@ const TransactionsPage = () => {
     const addTransaction = useTransaction((state) => state.addTransaction)
 
     const setTransactionType = useTransaction((state) => state.setTransactionType)
-
 
     const handleTrans = async (formData: Record<string, any>) => {
         const updatedData = {
@@ -63,7 +63,7 @@ const TransactionsPage = () => {
     }
     return (
 
-        <Flex background={"#e9e9e9"}>
+        <Flex background={"#e9e9e9"} h={"100vh"}>
             <VStack overflowY="auto" flex={2}>
                 <Box style={{ height: "100vh", overflowY: "auto", scrollbarWidth: 'none' }}>
                     <Accounts />
@@ -71,6 +71,11 @@ const TransactionsPage = () => {
             </VStack>
             <VStack overflowY="auto" flex={3}>
                 <Search />
+                <Box alignSelf={"start"} pl={4}>
+
+                    <Sort />
+                </Box>
+
                 <Box w={"100%"} style={{ height: "100vh", overflowY: "auto", scrollbarWidth: 'none' }}>
                     <Transactions />
                 </Box>
